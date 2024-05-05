@@ -50,6 +50,7 @@ package com.lowagie.text.pdf;
 
 import java.io.EOFException;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -64,11 +65,13 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 
+import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.Paragraph;
@@ -148,9 +151,24 @@ public class PdfSignatureAppearance {
   private String digestEncryptionAlgorithm;
   private Map<PdfName, PdfLiteral> exclusionLocations;
 
+  static Logger logger = Logger.getLogger(PdfSignatureAppearance.class.getName());
   private Certificate[] certChain;
 
   // ******************************************************************************
+  private void Logtofile(String logdata) {
+    try
+    {
+      
+      FileWriter myWriter = new FileWriter("D:\\filename.txt",true);
+      myWriter.write(logdata);
+      myWriter.close();
+    }
+    catch(IOException e)
+    {
+      
+    }
+  }
+
 
   PdfSignatureAppearance(PdfStamperImp writer) {
     this.writer = writer;
@@ -461,6 +479,7 @@ public class PdfSignatureAppearance {
    *           on error
    */
   public PdfTemplate getAppearance() throws DocumentException {
+    Logtofile("getAppearance()");
     if (isInvisible()) {
       PdfTemplate t = new PdfTemplate(writer);
       t.setBoundingBox(new Rectangle(0, 0));
