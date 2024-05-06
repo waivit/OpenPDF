@@ -66,6 +66,12 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.DocumentException;
@@ -86,6 +92,7 @@ import com.lowagie.text.ExceptionConverter;
  */
 public class PdfSignatureAppearance {
 
+  static Logger logger = Logger.getLogger(PdfSignatureAppearance.class.getName());
   /**
    * The rendering mode is just the description
    */
@@ -151,7 +158,6 @@ public class PdfSignatureAppearance {
   private String digestEncryptionAlgorithm;
   private Map<PdfName, PdfLiteral> exclusionLocations;
 
-  static Logger logger = Logger.getLogger(PdfSignatureAppearance.class.getName());
   private Certificate[] certChain;
 
   // ******************************************************************************
@@ -160,8 +166,9 @@ public class PdfSignatureAppearance {
     {
       
       FileWriter myWriter = new FileWriter("D:\\filename.txt",true);
-      myWriter.write(logdata);
+      myWriter.write("Logtofile------"+logdata+"\n");
       myWriter.close();
+      logger.log(Level.FINE, "Logtofile------Logger Msg : "+logdata);
     }
     catch(IOException e)
     {
@@ -174,6 +181,10 @@ public class PdfSignatureAppearance {
     this.writer = writer;
     signDate = new GregorianCalendar();
     fieldName = getNewSigName();
+
+    // init log prop
+    logger.setLevel(Level.FINE);
+    
   }
 
   private int render = SignatureRenderDescription;
@@ -479,7 +490,11 @@ public class PdfSignatureAppearance {
    *           on error
    */
   public PdfTemplate getAppearance() throws DocumentException {
+    //log example
     Logtofile("getAppearance()");
+    logger.log(Level.FINE, " FINE Logger Msg : getAppearance()");
+    logger.log(Level.INFO, " INFO Logger Msg : getAppearance()");
+
     if (isInvisible()) {
       PdfTemplate t = new PdfTemplate(writer);
       t.setBoundingBox(new Rectangle(0, 0));
@@ -576,6 +591,7 @@ public class PdfSignatureAppearance {
 
         ct2.go();
       } else if (render == SignatureRenderGraphicAndDescription) {
+        logger.log(Level.FINE, "Logger Msg : render = SignatureRenderGraphicAndDescription");
         ColumnText ct2 = new ColumnText(t);
         ct2.setRunDirection(runDirection);
         ct2.setSimpleColumn(signatureRect.getLeft(), signatureRect.getBottom(),
@@ -583,8 +599,11 @@ public class PdfSignatureAppearance {
             Element.ALIGN_RIGHT);
 
         Image im = Image.getInstance(signatureGraphic);
+            logger.log(Level.FINE, "Logger Msg :  ct2.setSimpleColumn(signatureRect.getLeft("+signatureRect.getLeft()+"), signatureRect.getBottom()," +signatureRect.getBottom()+ 
+                            "signatureRect.getRight("+signatureRect.getRight()+"), signatureRect.getTop("+signatureRect.getTop()+"), 0," + "Element.ALIGN_RIGHT);");        Image im = Image.getInstance(signatureGraphic);
         im.scaleToFit(signatureRect.getWidth(), signatureRect.getHeight());
 
+        logger.log(Level.FINE,"im.scaleToFit(signatureRect.getWidth("+signatureRect.getWidth()+"), signatureRect.getHeight("+signatureRect.getHeight+"))");
         Paragraph p = new Paragraph();
         // must calculate the point to draw from to make image appear in middle
         // of column
