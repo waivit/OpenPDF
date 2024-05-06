@@ -598,12 +598,12 @@ public class PdfSignatureAppearance {
             signatureRect.getRight(), signatureRect.getTop(), 0,
             Element.ALIGN_RIGHT);
 
-        Image im = Image.getInstance(signatureGraphic);
             logger.log(Level.FINE, "Logger Msg :  ct2.setSimpleColumn(signatureRect.getLeft("+signatureRect.getLeft()+"), signatureRect.getBottom()," +signatureRect.getBottom()+ 
-                            "signatureRect.getRight("+signatureRect.getRight()+"), signatureRect.getTop("+signatureRect.getTop()+"), 0," + "Element.ALIGN_RIGHT);");        Image im = Image.getInstance(signatureGraphic);
+                            "signatureRect.getRight("+signatureRect.getRight()+"), signatureRect.getTop("+signatureRect.getTop()+"), 0," + "Element.ALIGN_RIGHT);");
+        Image im = Image.getInstance(signatureGraphic);
         im.scaleToFit(signatureRect.getWidth(), signatureRect.getHeight());
 
-        logger.log(Level.FINE,"im.scaleToFit(signatureRect.getWidth("+signatureRect.getWidth()+"), signatureRect.getHeight("+signatureRect.getHeight+"))");
+        logger.log(Level.FINE,"im.scaleToFit(signatureRect.getWidth("+signatureRect.getWidth()+"), signatureRect.getHeight("+signatureRect.getHeight()+"))");
         Paragraph p = new Paragraph();
         // must calculate the point to draw from to make image appear in middle
         // of column
