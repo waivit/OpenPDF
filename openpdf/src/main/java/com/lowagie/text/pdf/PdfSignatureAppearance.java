@@ -125,7 +125,7 @@ public class PdfSignatureAppearance {
   public static final int CERTIFIED_FORM_FILLING_AND_ANNOTATIONS = 3;
 
   private static final float TOP_SECTION = 0.3f;
-  private static final float MARGIN = 2;
+  private static final float MARGIN = 0;
   private Rectangle rect;
   private Rectangle pageRect;
   private final PdfTemplate[] app = new PdfTemplate[5];
@@ -560,23 +560,23 @@ public class PdfSignatureAppearance {
       if (render == SignatureRenderNameAndDescription
           || (render == SignatureRenderGraphicAndDescription && this.signatureGraphic != null)) {
         // origin is the bottom-left
-        signatureRect = new Rectangle(MARGIN, MARGIN, rect.getWidth() / 2
+        signatureRect = new Rectangle(MARGIN, MARGIN, rect.getWidth() 
             - MARGIN, rect.getHeight() - MARGIN);
-        dataRect = new Rectangle(rect.getWidth() / 2 + MARGIN / 2, MARGIN,
-            rect.getWidth() - MARGIN / 2, rect.getHeight() - MARGIN);
-
+        //dataRect = new Rectangle(rect.getWidth() / 2 + MARGIN / 2, MARGIN, rect.getWidth() - MARGIN / 2, rect.getHeight() - MARGIN);
+        dataRect = new Rectangle(0,0,0,0);
         if (rect.getHeight() > rect.getWidth()) {
           signatureRect = new Rectangle(MARGIN, rect.getHeight() / 2,
               rect.getWidth() - MARGIN, rect.getHeight());
-          dataRect = new Rectangle(MARGIN, MARGIN, rect.getWidth() - MARGIN,
-              rect.getHeight() / 2 - MARGIN);
+          //dataRect = new Rectangle(MARGIN, MARGIN, rect.getWidth() - MARGIN, rect.getHeight() / 2 - MARGIN);
+          dataRect = new Rectangle(0,0,0,0);
         }
       } else {
-        dataRect = new Rectangle(MARGIN, MARGIN, rect.getWidth() - MARGIN,
-            rect.getHeight() * (1 - TOP_SECTION) - MARGIN);
+        //dataRect = new Rectangle(MARGIN, MARGIN, rect.getWidth() - MARGIN, rect.getHeight() * (1 - TOP_SECTION) - MARGIN);
+        dataRect = new Rectangle(0,0,0,0);
       }
 
       if (render == SignatureRenderNameAndDescription) {
+        logger.log(Level.FINE, "Logger Msg : render = SignatureRenderNameAndDescription");
         String signedBy = PdfPKCS7.getSubjectFields((X509Certificate) certChain[0]).getField("CN");
         Rectangle sr2 = new Rectangle(signatureRect.getWidth() - MARGIN,
             signatureRect.getHeight() - MARGIN);
@@ -598,8 +598,8 @@ public class PdfSignatureAppearance {
             signatureRect.getRight(), signatureRect.getTop(), 0,
             Element.ALIGN_RIGHT);
 
-            logger.log(Level.FINE, "Logger Msg :  ct2.setSimpleColumn(signatureRect.getLeft("+signatureRect.getLeft()+"), signatureRect.getBottom()," +signatureRect.getBottom()+ 
-                            "signatureRect.getRight("+signatureRect.getRight()+"), signatureRect.getTop("+signatureRect.getTop()+"), 0," + "Element.ALIGN_RIGHT);");
+            logger.log(Level.FINE, "Logger Msg :  ct2.setSimpleColumn(signatureRect.getLeft("+signatureRect.getLeft()+"), signatureRect.getBottom(" +signatureRect.getBottom()+ 
+                            "),signatureRect.getRight("+signatureRect.getRight()+"), signatureRect.getTop("+signatureRect.getTop()+"), 0," + "Element.ALIGN_RIGHT);");
         Image im = Image.getInstance(signatureGraphic);
         im.scaleToFit(signatureRect.getWidth(), signatureRect.getHeight());
 
@@ -612,25 +612,31 @@ public class PdfSignatureAppearance {
         // signature graphic, which
         // offsets the y co-ordinate by 15 units
         float y = -im.getScaledHeight() + 15;
-
+        logger.log(Level.FINE,"float y = -im.getScaledHeight() + 15;=" + y);
+      
         x = x + (signatureRect.getWidth() - im.getScaledWidth()) / 2;
+        logger.log(Level.FINE," x = x + (signatureRect.getWidth() - im.getScaledWidth()) / 2;=" + x);
         y = y - (signatureRect.getHeight() - im.getScaledHeight()) / 2;
+        logger.log(Level.FINE,"y = y - (signatureRect.getHeight() - im.getScaledHeight()) / 2;" + y);
         p.add(new Chunk(im, x
             + (signatureRect.getWidth() - im.getScaledWidth()) / 2, y, false));
         ct2.addElement(p);
         ct2.go();
       }
-
-      if (size <= 0) {
+      logger.log(Level.FINE,"size = 0("+size+"):::dataRect.getWidth("+dataRect.getWidth()+"), dataRect.getHeight("+dataRect.getHeight()+")");
+      if(true)// (size <= 0) 
+      {
+        logger.log(Level.FINE,"size <= 0("+size+"):::dataRect.getWidth("+dataRect.getWidth()+"), dataRect.getHeight("+dataRect.getHeight()+")");
         Rectangle sr = new Rectangle(dataRect.getWidth(), dataRect.getHeight());
         size = fitText(font, text, sr, 12, runDirection);
       }
-      ColumnText ct = new ColumnText(t);
-      ct.setRunDirection(runDirection);
-      ct.setSimpleColumn(new Phrase(text, font), dataRect.getLeft(),
-          dataRect.getBottom(), dataRect.getRight(), dataRect.getTop(), size,
-          Element.ALIGN_LEFT);
-      ct.go();
+      //ColumnText ct = new ColumnText(t);
+      //ct.setRunDirection(runDirection);
+      //ct.setSimpleColumn(new Phrase(text, font), dataRect.getLeft(),
+         // dataRect.getBottom(), dataRect.getRight(), dataRect.getTop(), size,
+          //Element.ALIGN_LEFT);
+      //ct.go();
+      logger.log(Level.FINE,"ct.notgo();");
     }
     if (app[3] == null && !acro6Layers) {
       PdfTemplate t = app[3] = new PdfTemplate(writer);
